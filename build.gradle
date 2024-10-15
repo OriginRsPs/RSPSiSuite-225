@@ -51,7 +51,7 @@ subprojects {
 
 
     lombok { // optional: values below are the defaults
-        version = "1.18.22"
+        version = "1.18.30"
     }
 
     compileJava {
@@ -63,6 +63,28 @@ subprojects {
     javafx {
         version = "17"
         modules = ['javafx.base', 'javafx.fxml', 'javafx.graphics', 'javafx.controls', 'javafx.media', 'javafx.swing']
+    }
+
+    tasks.withType(JavaExec).tap {
+        configureEach {
+            jvmArgs(
+                    "-Dio.netty.leakDetection.level=advanced",
+                    "--enable-preview",
+                    "-Xmx8g",
+                    "-Xms4g",
+                    "-XX:+UseParallelGC",
+                    "--add-exports", "java.base/sun.nio.ch=ALL-UNNAMED",
+                    "--add-exports", "jdk.unsupported/sun.misc=ALL-UNNAMED",
+                    "--add-opens", "jdk.unsupported/sun.misc=ALL-UNNAMED",
+                    "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED",
+                    "--add-opens", "java.base/java.lang.reflect=ALL-UNNAMED",
+                    "--add-opens", "java.base/java.io=ALL-UNNAMED",
+                    "--add-opens", "java.base/jdk.internal.misc=ALL-UNNAMED",
+                    "--add-opens", "java.base/java.time=ALL-UNNAMED",
+                    "--add-opens", "java.base/java.util=ALL-UNNAMED",
+                    "--add-opens", "java.base/java.lang=ALL-UNNAMED"
+            )
+        }
     }
 
 }
