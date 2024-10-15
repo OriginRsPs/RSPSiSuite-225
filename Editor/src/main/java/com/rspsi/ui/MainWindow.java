@@ -131,8 +131,8 @@ public class MainWindow extends Application {
 
 	private ObjectPreviewWindow objectPreviewWindow;
 	private PickCoordinatesWindow pickCoords;
-	private PickHashWindow pickHash;
-	private MultiRegionMapWindow fullMapView;
+	public PickHashWindow pickHash;
+	public MultiRegionMapWindow fullMapView;
 	private SelectFilesWindow selectFiles;
 	private SelectPackWindow selectPack;
 	private SelectXTEAWindow selectXTEA;

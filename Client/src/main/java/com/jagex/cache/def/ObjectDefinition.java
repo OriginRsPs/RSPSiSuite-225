@@ -76,6 +76,7 @@ public final class ObjectDefinition {
 	private int translateY;
 	private int translateZ;
 	private int width;
+	private int interactType;
 
 	private int category;
 	private boolean randomizeAnimStart;

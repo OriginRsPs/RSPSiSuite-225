@@ -100,6 +100,7 @@ public class ObjectDefinitionLoaderOSRS extends ObjectDefinitionLoader {
 			} else if (opcode == 15) {
 				definition.setLength(buffer.readUByte());
 			} else if (opcode == 17) {
+				definition.setInteractType(0);
 				definition.setSolid(false);
 			} else if (opcode == 18) {
 				definition.setImpenetrable(false);
@@ -121,13 +122,13 @@ public class ObjectDefinitionLoaderOSRS extends ObjectDefinitionLoader {
 				}
 				definition.setAnimation(animation);
 			} else if (opcode == 27) {
-				//setInteractType(1);
+				definition.setInteractType(1);
 			} else if (opcode == 28) {
 				definition.setDecorDisplacement(buffer.readUByte());
 			} else if (opcode == 29) {
 				definition.setAmbientLighting(buffer.readByte());
 			} else if (opcode == 39) {
-				definition.setLightDiffusion(buffer.readByte());
+				definition.setLightDiffusion((byte) (buffer.readByte() * 25));
 			} else if (opcode >= 30 && opcode < 39) {
 				String[] interactions = new String[10];
 
@@ -258,10 +259,11 @@ public class ObjectDefinitionLoaderOSRS extends ObjectDefinitionLoader {
 			definition.setSolid(false);
 			definition.setImpenetrable(false);
 		}
+
 		definition.setDelayShading(false);
 
 		if (definition.getSupportItems() == -1) {
-			definition.setSupportItems(definition.isSolid() ? 1 : 0);
+			definition.setSupportItems(definition.getInteractType() != 0 ? 1 : 0);
 		}
 		return definition;
 	}

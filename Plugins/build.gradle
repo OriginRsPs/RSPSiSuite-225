@@ -27,6 +27,7 @@ subprojects {
     }
 
     dependencies {
+        implementation 'fastutil:fastutil:5.0.9'
         implementation project(':Editor')
     }
 

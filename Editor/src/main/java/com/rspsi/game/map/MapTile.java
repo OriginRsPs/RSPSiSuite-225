@@ -58,7 +58,6 @@ public class MapTile {
 			EventBus.getDefault().register(this);
 			sceneGraph = new SceneGraph(64, 64, 4);
 			mapRegion = new MapRegion(sceneGraph, 64, 64);
-			
 		}
 		
 		public int[] drawMinimapOriented(int plane) {

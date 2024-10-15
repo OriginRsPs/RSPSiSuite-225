@@ -1127,26 +1127,28 @@ public class Mesh extends Renderable {
                     colourZ = shadedtriangleColorsZ[index];
                 }
 
-                int texId = faceMaterial[index];
-                //texId = 23;
-                rasterizer.drawTexturedTriangle(
-                        rasterizer.vertexScreenY[faceX],
-                        rasterizer.vertexScreenY[faceY],
-                        rasterizer.vertexScreenY[faceZ],
-                        rasterizer.vertexScreenX[faceX],
-                        rasterizer.vertexScreenX[faceY],
-                        rasterizer.vertexScreenX[faceZ],
-                        colourX, colourY, colourZ,
-                        rasterizer.camera_vertex_x[texFaceX],
-                        rasterizer.camera_vertex_x[texFaceY],
-                        rasterizer.camera_vertex_x[texFaceZ],
-                        rasterizer.camera_vertex_y[texFaceX],
-                        rasterizer.camera_vertex_y[texFaceY],
-                        rasterizer.camera_vertex_y[texFaceZ],
-                        rasterizer.camera_vertex_z[texFaceX],
-                        rasterizer.camera_vertex_z[texFaceY],
-                        rasterizer.camera_vertex_z[texFaceZ],
-                        texId);
+                if (faceMaterial != null) {
+                    int texId = faceMaterial[index];
+                    //texId = 23;
+                    rasterizer.drawTexturedTriangle(
+                            rasterizer.vertexScreenY[faceX],
+                            rasterizer.vertexScreenY[faceY],
+                            rasterizer.vertexScreenY[faceZ],
+                            rasterizer.vertexScreenX[faceX],
+                            rasterizer.vertexScreenX[faceY],
+                            rasterizer.vertexScreenX[faceZ],
+                            colourX, colourY, colourZ,
+                            rasterizer.camera_vertex_x[texFaceX],
+                            rasterizer.camera_vertex_x[texFaceY],
+                            rasterizer.camera_vertex_x[texFaceZ],
+                            rasterizer.camera_vertex_y[texFaceX],
+                            rasterizer.camera_vertex_y[texFaceY],
+                            rasterizer.camera_vertex_y[texFaceZ],
+                            rasterizer.camera_vertex_z[texFaceX],
+                            rasterizer.camera_vertex_z[texFaceY],
+                            rasterizer.camera_vertex_z[texFaceZ],
+                            texId);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 log.info("{} {} {} | {} {} {}", faceX, faceY, faceZ, texFaceX, texFaceY, texFaceZ);

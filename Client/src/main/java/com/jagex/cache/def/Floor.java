@@ -104,6 +104,103 @@ public class Floor {
 		return shadowed;
 	}
 
+	public void calculateHsl()
+	{
+		int var1 = colour;
+		double var2 = (double) (var1 >> 16 & 255) / 256.0D;
+		double var4 = (double) (var1 >> 8 & 255) / 256.0D;
+		double var6 = (double) (var1 & 255) / 256.0D;
+		double var8 = var2;
+		if (var4 < var2)
+		{
+			var8 = var4;
+		}
+
+		if (var6 < var8)
+		{
+			var8 = var6;
+		}
+
+		double var10 = var2;
+		if (var4 > var2)
+		{
+			var10 = var4;
+		}
+
+		if (var6 > var10)
+		{
+			var10 = var6;
+		}
+
+		double var12 = 0.0D;
+		double var14 = 0.0D;
+		double var16 = (var10 + var8) / 2.0D;
+		if (var8 != var10)
+		{
+			if (var16 < 0.5D)
+			{
+				var14 = (var10 - var8) / (var8 + var10);
+			}
+
+			if (var16 >= 0.5D)
+			{
+				var14 = (var10 - var8) / (2.0D - var10 - var8);
+			}
+
+			if (var2 == var10)
+			{
+				var12 = (var4 - var6) / (var10 - var8);
+			}
+			else if (var10 == var4)
+			{
+				var12 = 2.0D + (var6 - var2) / (var10 - var8);
+			}
+			else if (var10 == var6)
+			{
+				var12 = 4.0D + (var2 - var4) / (var10 - var8);
+			}
+		}
+
+		var12 /= 6.0D;
+		this.saturation = (int) (var14 * 256.0D);
+		this.luminance = (int) (var16 * 256.0D);
+		if (this.saturation < 0)
+		{
+			this.saturation = 0;
+		}
+		else if (this.saturation > 255)
+		{
+			this.saturation = 255;
+		}
+
+		if (this.luminance < 0)
+		{
+			this.luminance = 0;
+		}
+		else if (this.luminance > 255)
+		{
+			this.luminance = 255;
+		}
+
+		if (var16 > 0.5D)
+		{
+			this.chroma = (int) (var14 * (1.0D - var16) * 512.0D);
+		}
+		else
+		{
+			this.chroma = (int) (var14 * var16 * 512.0D);
+		}
+
+		if (this.chroma < 1)
+		{
+			this.chroma = 1;
+		}
+
+		this.weightedHue = (int) (var12 * chroma);
+		this.hue = (int) ((double) this.chroma * var12);
+		this.colour = hsl24to16(hue, saturation, luminance);
+	}
+
 	private void rgbToHsl(int rgb) {
 		double r = (rgb >> 16 & 0xff) / 256.0;
 		double g = (rgb >> 8 & 0xff) / 256.0;

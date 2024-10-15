@@ -27,6 +27,8 @@ import com.rspsi.plugin.loader.TextureLoaderOSRS;
 import com.rspsi.plugin.loader.VarbitLoaderOSRS;
 import com.rspsi.plugins.core.ClientPlugin;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class OSRSPlugin implements ClientPlugin {
 
 	private FrameLoaderOSRS frameLoader;
@@ -68,33 +70,31 @@ public class OSRSPlugin implements ClientPlugin {
 
 	@Override
 	public void onGameLoaded(Client client) {
-		
-			frameLoader.init(2500);
-			
-			Index configIndex = client.getCache().getFile(CacheFileType.CONFIG);
 
-			floorLoader.initOverlays(configIndex.archive(4));
-			floorLoader.initUnderlays(configIndex.archive(1));
-			
-			objLoader.init(configIndex.archive(6));
-			animDefLoader.init(configIndex.archive(12));
-			graphicLoader.init(configIndex.archive(13));
-			varbitLoader.init(configIndex.archive(14));
-			areaLoader.init(configIndex.archive(35));
+		frameLoader.init(5000);
 
-			objLoader.renameMapFunctions(areaLoader);
-			
-			Index skeletonIndex = client.getCache().getFile(CacheFileType.SKELETON);
-			skeletonLoader.init(skeletonIndex);
-			
-			Index mapIndex = client.getCache().getFile(CacheFileType.MAP);
-			mapIndexLoader.init(mapIndex);
-			
-			Index textureIndex = client.getCache().getFile(CacheFileType.TEXTURE);
-			Index spriteIndex = client.getCache().getFile(CacheFileType.SPRITE);
-			textureLoader.init(textureIndex.archive(0), spriteIndex);
-			
+		final Index configIndex = client.getCache().getFile(CacheFileType.CONFIG);
 
+		floorLoader.initOverlays(configIndex.archive(4));
+		floorLoader.initUnderlays(configIndex.archive(1));
+
+		objLoader.init(configIndex.archive(6));
+		animDefLoader.init(configIndex.archive(12));
+		graphicLoader.init(configIndex.archive(13));
+		varbitLoader.init(configIndex.archive(14));
+		areaLoader.init(configIndex.archive(35));
+
+		objLoader.renameMapFunctions(areaLoader);
+
+		Index skeletonIndex = client.getCache().getFile(CacheFileType.SKELETON);
+		skeletonLoader.init(skeletonIndex);
+
+		Index mapIndex = client.getCache().getFile(CacheFileType.MAP);
+		mapIndexLoader.init(mapIndex);
+
+		Index textureIndex = client.getCache().getFile(CacheFileType.TEXTURE);
+		Index spriteIndex = client.getCache().getFile(CacheFileType.SPRITE);
+		textureLoader.init(textureIndex.archive(0), spriteIndex);
 	}
 
 	@Override

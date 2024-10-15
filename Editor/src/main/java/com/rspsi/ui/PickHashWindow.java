@@ -19,6 +19,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import lombok.Setter;
 
 public class PickHashWindow extends Application {
 
@@ -92,6 +93,7 @@ public class PickHashWindow extends Application {
 	
 
 	@FXML
+	@Setter
     private TextField hashText;
 
 

@@ -102,6 +102,8 @@ public class RSAreaLoaderOSRS extends RSAreaLoader {
 				area.setAnIntArray1982(anIntArray1982);
 				area.setAnIntArray1981(anIntArray1981);
 				area.setAByteArray1979(aByteArray1979);
+			} else if (opcode == 16) {
+
 			} else if (opcode == 17) {
 				area.setAString1970(ByteBufferUtils.getOSRSString(buffer));
 			} else if (opcode == 18) {
@@ -124,9 +126,13 @@ public class RSAreaLoaderOSRS extends RSAreaLoader {
 			} else if (opcode == 28) {
 				buffer.get();
 			} else if (opcode == 29) {
-				buffer.get();
+				int pos = buffer.position();
+				pos += 1;
+				buffer.position(pos);
 			} else if (opcode == 30) {
-				buffer.get();
+				int pos = buffer.position();
+				pos += 1;
+				buffer.position(pos);
 			}
 		}
 		return area;

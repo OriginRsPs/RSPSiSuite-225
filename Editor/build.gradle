@@ -8,6 +8,7 @@ buildscript {
         // provides javafx-gradle-plugin
 //         classpath group: 'de.dynamicfiles.projects.gradle.plugins', name: 'javafx-gradle-plugin', version: "8.8.2"
         // provides proguard.gradle.ProGuardTask (including all requirements)
+        // https://mvnrepository.com/artifact/fastutil/fastutil
         classpath 'net.sf.proguard:proguard-gradle:6.1.1'
     }
 }

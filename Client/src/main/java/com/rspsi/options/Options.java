@@ -67,7 +67,7 @@ public class Options {
 
 	public static BooleanProperty hdMap = new SimpleBooleanProperty(false);
 	
-	public static BooleanProperty loadAnimations = new SimpleBooleanProperty(false);
+	public static BooleanProperty loadAnimations = new SimpleBooleanProperty(true);
 
 	public static BooleanProperty unsavedChanges = new SimpleBooleanProperty(false);
 	

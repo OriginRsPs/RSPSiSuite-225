@@ -104,35 +104,29 @@ public class Cache {
     }
 
     public final Index getFile(CacheFileType index) {
-        try {
-            switch (index) {
-                case CONFIG:
-                    return configArchive;
-                case MODEL:
-                    return modelArchive;
-                case ANIMATION:
-                    return skinArchive;
-                case SKELETON:
-                    return skeletonArchive;
-                case SOUND:
-                    break;
-                case MAP:
-                    return mapArchive;
-                case SPRITE:
-                    return spriteIndex;
-                case TEXTURE:
-                    return textureIndex;
-                case SPOT:
-                    return spotAnimIndex;
-                case VARBIT:
-                    return varbitIndex;
-                case LOC:
-                    return locIndex;
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return null;
+        return switch (index) {
+            case CONFIG:
+                yield configArchive;
+            case MODEL:
+                yield modelArchive;
+            case ANIMATION:
+                yield skinArchive;
+            case SKELETON:
+                yield skeletonArchive;
+            case MAP:
+                yield mapArchive;
+            case SPRITE:
+                yield spriteIndex;
+            case TEXTURE:
+                yield textureIndex;
+            case SPOT:
+                yield spotAnimIndex;
+            case VARBIT:
+                yield varbitIndex;
+            case LOC:
+                yield locIndex;
+            default: yield null;
+        };
     }
 
     public final byte[] readMap(int fileId, int regionId) {
