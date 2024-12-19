@@ -1,5 +1,6 @@
 package com.jagex;
 
+import com.displee.cache.index.Index;
 import com.displee.cache.index.archive.Archive;
 import com.jagex.map.SceneGraph;
 import com.jagex.map.tile.SceneTile;
@@ -485,27 +486,41 @@ public final class Client implements Runnable {
             final Sprite[] sprites = new Sprite[1000];
             if (cache.getIndexedFileSystem().is317()) {
                 currentArchive = cache.createArchive(4, "2d graphics");
-                int lastIdx = 0;
-                try {
+                if (currentArchive != null) {
+                    int lastIdx = 0;
+                    try {
 
-                    for (int scene = 0; scene < 93; scene++) {
-                        sprites[scene] = new Sprite(currentArchive, "mapscene", scene);
-                        lastIdx = scene;
+                        for (int scene = 0; scene < 93; scene++) {
+                            sprites[scene] = new Sprite(currentArchive, "mapscene", scene);
+                            lastIdx = scene;
+                        }
+                    } catch (Exception ex) {
                     }
-                } catch (Exception ex) {
-                }
-                mapScenes = Arrays.copyOf(sprites, lastIdx + 1);
+                    mapScenes = Arrays.copyOf(sprites, lastIdx + 1);
 
-                lastIdx = 0;
+                    lastIdx = 0;
 
-                for (int function = 0; function < sprites.length; function++) {
-                    sprites[function] = new Sprite(currentArchive, "mapfunction", function);
-                    lastIdx = function;
+                    for (int function = 0; function < sprites.length; function++) {
+                        sprites[function] = new Sprite(currentArchive, "mapfunction", function);
+                        lastIdx = function;
+                    }
+                    mapFunctions = Arrays.copyOf(sprites, lastIdx + 1);
                 }
-                mapFunctions = Arrays.copyOf(sprites, lastIdx + 1);
             } else {
                 try {
-                    mapScenes = Sprite.unpackAndDecode(ByteBuffer.wrap(cache.getFile(CacheFileType.SPRITE).archive("mapscene").file(0).getData()));
+                    final Index index = cache.getFile(CacheFileType.SPRITE);
+                    if (index != null) {
+                        final Archive archive = index.archive("mapscene");
+                        if (archive != null) {
+                            final var file = archive.file(0);
+                            if (file != null) {
+                                final byte[] data = file.getData();
+                                if (data != null) {
+                                    mapScenes = Sprite.unpackAndDecode(ByteBuffer.wrap(data));
+                                }
+                            }
+                        }
+                    }
                 } catch (Exception e) {
                     mapScenes = new Sprite[0];
                 }

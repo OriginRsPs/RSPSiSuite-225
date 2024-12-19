@@ -799,8 +799,10 @@ public class MainWindow extends Application {
 				clientInstance.yCameraPos = (chunk.offsetY + 32) * 128;
 				File landscapeFile = RetentionFileChooser.showSaveDialog("Enter a name for tiles...", stage, chunk.tileMapId + "",
 						FilterMode.DAT, FilterMode.GZIP);
+
 				if (landscapeFile == null)
 					return;
+
 				File objectFile = RetentionFileChooser.showSaveDialog("Enter a name for objects...", stage, chunk.objectMapId + "",
 						FilterMode.DAT, FilterMode.GZIP);
 

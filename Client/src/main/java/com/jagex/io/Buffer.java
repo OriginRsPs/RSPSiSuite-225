@@ -43,6 +43,10 @@ public final class Buffer {
 		position = 0;
 	}
 
+	public int read24BitInt() {
+		return (this.readUByte() << 16) + (this.readUByte() << 8) + this.readUByte();
+	}
+
 	public void disableBitAccess() {
 		position = (bitPosition + 7) / 8;
 	}
@@ -289,6 +293,11 @@ public final class Buffer {
 	public int readUShort() {
 		position += 2;
 		return ((payload[position - 2] & 0xff) << 8) + (payload[position - 1] & 0xff);
+	}
+
+	public int readUnsignedShort() {
+		position += 2;
+		return (this.payload[this.position - 1] & 255) + ((this.payload[this.position - 2] & 255) << 8);
 	}
 
 	public int readUShortA() {

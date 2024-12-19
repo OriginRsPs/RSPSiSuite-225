@@ -5,7 +5,9 @@ import com.displee.cache.index.archive.Archive;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
 
 import com.displee.cache.index.archive.file.File;
@@ -124,6 +126,8 @@ public class MapIndexLoaderOSRS extends MapIndexLoader {
 		
 	}
 
+	public static final Map<Integer, Map<String, String>> regions = new HashMap<>();
+
 	public void init(Index mapIndex) {
 		// TODO Auto-generated method stub
 		List<RegionData> regionData = Lists.newArrayList();
@@ -137,6 +141,12 @@ public class MapIndexLoaderOSRS extends MapIndexLoader {
 			RegionData data = new RegionData(i, map != null ? map.getId() : -1, land != null ? land.getId() : -1);
 			
 			if(data.getLoc() != -1 && data.getObj() != -1) {
+				Map<String, String> landMapArchive = new HashMap<>();
+				landMapArchive.put("m" + x + "_" + y, "l" + x + "_" + y);
+
+				int regionId = x << 8 | y;
+				regions.put(regionId, landMapArchive);
+
 				regionData.add(data);
 			}
 		}

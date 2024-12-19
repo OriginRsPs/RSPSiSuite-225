@@ -3,6 +3,7 @@ package com.rspsi.ui;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.List;
@@ -78,16 +79,15 @@ public class LauncherWindow extends Application {
 		
 		controller.getCacheLocation().getEditor().setText(new File(cacheLoc).getAbsolutePath() + File.separator);
 		
-		ChangeListenerUtil.addListener(() -> {
-			primaryStage.sizeToScene();
-		}, controller.getPluginTitlePane().expandedProperty());
+		ChangeListenerUtil.addListener(primaryStage::sizeToScene, controller.getPluginTitlePane().expandedProperty());
 		
 		
 		controller.getDisablePluginButton().setOnAction(evt -> {
+			log.info("here");
 			String pluginName = controller.getEnabledPlugins().getFocusModel().getFocusedItem();
 			if(pluginName != null) {
-				File oldPluginFile = new File(PLUGINS_PATH + "active" + File.separator + pluginName + ".jar");
-				File newPluginFile = new File(PLUGINS_PATH + "inactive" + File.separator + pluginName + ".jar");
+				File oldPluginFile = new File(Path.of("plugins", "active", pluginName + ".jar").toAbsolutePath().toString());
+				File newPluginFile = new File(Path.of("plugins", "inactive", pluginName + ".jar").toAbsolutePath().toString());
 				try {
 					Files.copy(oldPluginFile, newPluginFile);
 					oldPluginFile.delete();
@@ -105,8 +105,8 @@ public class LauncherWindow extends Application {
 			String pluginName = controller.getDisabledPlugins().getFocusModel().getFocusedItem();
 			if(pluginName != null) {
 
-				File inactiveFolder = new File(PLUGINS_PATH + "inactive" + File.separator);
-				File activeFolder = new File(PLUGINS_PATH + "active" + File.separator);
+				File inactiveFolder = new File(Path.of("plugins", "inactive").toAbsolutePath().toString());
+				File activeFolder = new File(Path.of("plugins", "active").toAbsolutePath().toString()); //1 sec bro i gotat use bathroom
 				
 				File oldPluginFile = new File(inactiveFolder,  pluginName + ".jar");
 				File newPluginFile = new File(activeFolder, pluginName + ".jar");
@@ -189,9 +189,11 @@ public class LauncherWindow extends Application {
 	
 	private static List<String> getPlugins(String folderName){
 		List<String> list = Lists.newArrayList();
-		File folder = new File(PLUGINS_PATH + folderName);
+		File folder = new File(Path.of("plugins", folderName).toAbsolutePath().toString());
+		log.info("exists {}", folder.exists());
 		if(folder.exists()) {
 			for(File f : folder.listFiles()) {
+				System.out.println("file: " + f.getName());
 				list.add(f.getName().replaceAll(".jar", "").trim());
 			}
 		}

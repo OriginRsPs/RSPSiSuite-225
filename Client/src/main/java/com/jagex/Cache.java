@@ -209,6 +209,9 @@ public class Cache {
     }
 
     public final Archive createArchive(int file, String name) {
+        if (configArchive == null) {
+            return null;
+        }
         return configArchive.archive(file);
     }
 

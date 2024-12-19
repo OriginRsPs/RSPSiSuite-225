@@ -39,11 +39,13 @@ public class RenderableObject extends Renderable {
 		this.randomFrame = randomFrame;
 		if (animationId != -1) {
 			animation = AnimationDefinitionLoader.getAnimation(animationId);
-			currentFrameId = 0;
-			currentFrameDuration = Client.pulseTick;
-			if (randomFrame && animation.getLoopOffset() != -1) {
-				currentFrameId = (int) (Math.random() * animation.getFrameCount());
-				currentFrameDuration -= (int) (Math.random() * animation.duration(currentFrameId));
+			if (animation != null) {
+				currentFrameId = 0;
+				currentFrameDuration = Client.pulseTick;
+				if (randomFrame && animation.getLoopOffset() != -1) {
+					currentFrameId = (int) (Math.random() * animation.getFrameCount());
+					currentFrameDuration -= (int) (Math.random() * animation.duration(currentFrameId));
+				}
 			}
 		}
 
