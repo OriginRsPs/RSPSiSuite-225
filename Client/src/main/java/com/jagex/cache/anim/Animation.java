@@ -1,5 +1,7 @@
 package com.jagex.cache.anim;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import com.jagex.cache.loader.anim.FrameLoader;
 
 public class Animation {
@@ -8,72 +10,77 @@ public class Animation {
 	 * The animation precedence (will this animation 'override' other animations or
 	 * will this one yield).
 	 */
-	private int animatingPrecedence = -1;
+	public int moveStyle = -1;
 
 	/**
 	 * The duration of each frame in this Animation.
 	 */
-	private int[] durations;
+	public int[] delays;
 
 	/**
 	 * The amount of frames in this Animation.
 	 */
-	private int frameCount;
+	public int frameCount;
 
-	private int[] interleaveOrder;
+	public int[] interleaveOrder;
 
 	/**
 	 * The amount of frames subtracted to restart the loop.
 	 */
-	private int loopOffset = -1;
+	public int frameStep = -1;
 
 	/**
 	 * The maximum times this animation will loop.
 	 */
-	private int maximumLoops = 99;
+	public int loopCount = 99;
 
 	/**
 	 * Indicates whether or not this player's shield will be displayed whilst this
 	 * animation is played.
 	 */
-	private int playerOffhand = -1;
+	public int leftHandItem = -1;
 
 	/**
 	 * Indicates whether or not this player's weapon will be displayed whilst this
 	 * animation is played.
 	 */
-	private int playerMainhand = -1;
+	public int rightHandItem = -1;
 
 	/**
 	 * The primary frame ids of this Animation.
 	 */
-	private int[] primaryFrames;
-
-	private int priority = 5;
-
-	private int replayMode = 2;
+	public int[] primaryFrames;
+	public int[] masks;
+	public boolean[] booleanMasks;
+	public int rangeBegin;
+	public int rangeEnd;
+	public int[] chatFrameIds;
+	public Multimap<Integer, Sound> frameSounds = ArrayListMultimap.create();
+	public int skeletalId = -1;
+	public int priority = 5;
+	public int delayType = 2;
 
 	/**
 	 * The secondary frame ids of this Animation.
 	 */
-	private int[] secondaryFrames;
+	public int[] secondaryFrames;
 
-	private boolean stretches = false;
+	public boolean stretches = false;
 
 	/**
 	 * The walking precedence (will the player be prevented from moving or can they
 	 * continue).
 	 */
-	private int walkingPrecedence = -1;
+	public int idleStyle = -1;
 
 
 	public int duration(int frameId) {
-		int duration = durations[frameId];
+		int duration = delays[frameId];
 		if (duration == 0) {
 			Frame frame = FrameLoader.lookup(primaryFrames[frameId]);
 
 			if (frame != null) {
-				duration = durations[frameId] = frame.getDuration();
+				duration = delays[frameId] = frame.getDuration();
 			}
 		}
 
@@ -84,12 +91,12 @@ public class Animation {
 	 * Gets the animation precedence (will this animation 'override' other
 	 * animations or will this one yield).
 	 */
-	public int getAnimatingPrecedence() {
-		return animatingPrecedence;
+	public int getMoveStyle() {
+		return moveStyle;
 	}
 
-	public int[] getDurations() {
-		return durations;
+	public int[] getDelays() {
+		return delays;
 	}
 
 	/**
@@ -110,8 +117,8 @@ public class Animation {
 	 * 
 	 * @return The loop offset.
 	 */
-	public int getLoopOffset() {
-		return loopOffset;
+	public int getFrameStep() {
+		return frameStep;
 	}
 
 	/**
@@ -119,8 +126,8 @@ public class Animation {
 	 * 
 	 * @return The maximum loop count.
 	 */
-	public int getMaximumLoops() {
-		return maximumLoops;
+	public int getLoopCount() {
+		return loopCount;
 	}
 
 	/**
@@ -128,7 +135,7 @@ public class Animation {
 	 * animation is played.
 	 */
 	public int getPlayerShieldDelta() {
-		return playerOffhand;
+		return leftHandItem;
 	}
 
 	/**
@@ -136,7 +143,7 @@ public class Animation {
 	 * animation is played.
 	 */
 	public int getPlayerWeaponDelta() {
-		return playerMainhand;
+		return rightHandItem;
 	}
 
 	/**
@@ -162,8 +169,8 @@ public class Animation {
 	 * 
 	 * @return The replay mode.
 	 */
-	public int getReplayMode() {
-		return replayMode;
+	public int getDelayType() {
+		return delayType;
 	}
 
 	/**
@@ -181,20 +188,20 @@ public class Animation {
 	 * 
 	 * @return The walking precedence.
 	 */
-	public int getWalkingPrecedence() {
-		return walkingPrecedence;
+	public int getIdleStyle() {
+		return idleStyle;
 	}
 
 	public boolean stretches() {
 		return stretches;
 	}
 
-	public void setAnimatingPrecedence(int animatingPrecedence) {
-		this.animatingPrecedence = animatingPrecedence;
+	public void setMoveStyle(int moveStyle) {
+		this.moveStyle = moveStyle;
 	}
 
-	public void setDurations(int[] durations) {
-		this.durations = durations;
+	public void setDelays(int[] delays) {
+		this.delays = delays;
 	}
 
 	public void setFrameCount(int frameCount) {
@@ -205,20 +212,20 @@ public class Animation {
 		this.interleaveOrder = interleaveOrder;
 	}
 
-	public void setLoopOffset(int loopOffset) {
-		this.loopOffset = loopOffset;
+	public void setFrameStep(int frameStep) {
+		this.frameStep = frameStep;
 	}
 
-	public void setMaximumLoops(int maximumLoops) {
-		this.maximumLoops = maximumLoops;
+	public void setLoopCount(int loopCount) {
+		this.loopCount = loopCount;
 	}
 
-	public void setPlayerOffhand(int playerOffhand) {
-		this.playerOffhand = playerOffhand;
+	public void setLeftHandItem(int leftHandItem) {
+		this.leftHandItem = leftHandItem;
 	}
 
-	public void setPlayerMainhand(int playerMainhand) {
-		this.playerMainhand = playerMainhand;
+	public void setRightHandItem(int rightHandItem) {
+		this.rightHandItem = rightHandItem;
 	}
 
 	public void setPrimaryFrames(int[] primaryFrames) {
@@ -229,8 +236,8 @@ public class Animation {
 		this.priority = priority;
 	}
 
-	public void setReplayMode(int replayMode) {
-		this.replayMode = replayMode;
+	public void setDelayType(int delayType) {
+		this.delayType = delayType;
 	}
 
 	public void setSecondaryFrames(int[] secondaryFrames) {
@@ -241,8 +248,8 @@ public class Animation {
 		this.stretches = stretches;
 	}
 
-	public void setWalkingPrecedence(int walkingPrecedence) {
-		this.walkingPrecedence = walkingPrecedence;
+	public void setIdleStyle(int idleStyle) {
+		this.idleStyle = idleStyle;
 	}
 	
 	

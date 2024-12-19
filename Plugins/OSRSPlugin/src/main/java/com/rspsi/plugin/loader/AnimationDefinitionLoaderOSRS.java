@@ -4,12 +4,10 @@ import com.displee.cache.index.archive.Archive;
 import com.displee.cache.index.archive.file.File;
 
 import java.util.Arrays;
-import java.util.List;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import lombok.val;
-import org.apache.commons.compress.utils.Lists;
+import com.jagex.cache.anim.Sound;
 
 import com.jagex.cache.anim.Animation;
 import com.jagex.cache.loader.anim.AnimationDefinitionLoader;
@@ -23,7 +21,7 @@ public class AnimationDefinitionLoaderOSRS extends AnimationDefinitionLoader {
 
     @Override
     public void init(Archive archive) {
-        val highestId = Arrays.stream(archive.fileIds()).max().getAsInt();
+        int highestId = Arrays.stream(archive.fileIds()).max().getAsInt();
         animations = new Animation[highestId + 1];
         for (File file : archive.files()) {
             if (file != null && file.getData() != null) {
@@ -68,29 +66,25 @@ public class AnimationDefinitionLoaderOSRS extends AnimationDefinitionLoader {
         if (opcode == 1) { //sec
             int frameCount = buffer.readUShort();
 
-            int[] delays = new int[frameCount];
+            animation.delays = new int[frameCount];
 
             for (int index = 0; index < frameCount; index++) {
-                delays[index] = buffer.readUShort();
+                animation.delays[index] = buffer.readUShort();
             }
 
-            int[] primaryFrameIds = new int[frameCount];
-            int[] secondaryFrames = new int[frameCount];
+            animation.primaryFrames = new int[frameCount];
+
             for (int index = 0; index < frameCount; index++) {
-                primaryFrameIds[index] = buffer.readUShort();
-                secondaryFrames[index] = -1;
+                animation.primaryFrames[index] = buffer.readUShort();
             }
 
             for (int index = 0; index < frameCount; index++) {
-                primaryFrameIds[index] += buffer.readUShort() << 16;
+                animation.primaryFrames[index] += buffer.readUShort() << 16;
             }
 
             animation.setFrameCount(frameCount);
-            animation.setPrimaryFrames(primaryFrameIds);
-            animation.setSecondaryFrames(secondaryFrames);
-            animation.setDurations(delays);
         } else if (opcode == 2) {
-            animation.setLoopOffset(buffer.readUShort());
+            animation.setFrameStep(buffer.readUShort());
         } else if (opcode == 3) {
             int count = buffer.readUByte();
             int[] interleaveOrder = new int[count + 1];
@@ -105,45 +99,44 @@ public class AnimationDefinitionLoaderOSRS extends AnimationDefinitionLoader {
         } else if (opcode == 5) {
             animation.setPriority(buffer.readUByte());
         } else if (opcode == 6) {
-            animation.setPlayerOffhand(buffer.readUShort());
+            animation.setLeftHandItem(buffer.readUShort());
         } else if (opcode == 7) {
-            animation.setPlayerMainhand(buffer.readUShort());
+            animation.setRightHandItem(buffer.readUShort());
         } else if (opcode == 8) {
-            animation.setMaximumLoops(buffer.readUByte());
+            animation.setLoopCount(buffer.readUByte());
         } else if (opcode == 9) {
-            animation.setAnimatingPrecedence(buffer.readUByte());
+            animation.setMoveStyle(buffer.readUByte());
         } else if (opcode == 10) {
-            animation.setWalkingPrecedence(buffer.readUByte());
+            animation.setIdleStyle(buffer.readUByte());
         } else if (opcode == 11) {
-            animation.setReplayMode(buffer.readUByte());
+            animation.setDelayType(buffer.readUByte());
         } else if (opcode == 12) {
             int len = buffer.readUByte();
-
+            animation.chatFrameIds = new int[len];
             for (int i = 0; i < len; i++) {
-                buffer.readUShort();
+                animation.chatFrameIds[i] = buffer.readUShort();
             }
 
             for (int i = 0; i < len; i++) {
-                var frameIds = buffer.readUShort() << 16;
+                animation.chatFrameIds[i] = buffer.readUShort() << 16;
             }
         } else if (opcode == 13 && !rev226) {
             int len = buffer.readUByte();
 
             for (int i = 0; i < len; i++) {
-                frameSounds.put(i, this.readFrameSound(buffer));
+                animation.frameSounds.put(i, this.readFrameSound(buffer));
             }
-
         } else if (opcode == (rev226 ? 13 : 14)) {
-            int skeletalId = buffer.readInt();
+            animation.skeletalId = buffer.readInt();
         } else if (opcode == (rev226 ? 14 : 15)) {
             int count = buffer.readUnsignedShort();
             for (int index = 0; index < count; index++) {
                 int frame = buffer.readUnsignedShort();
-                frameSounds.put(frame, this.readFrameSound(buffer));
+                animation.frameSounds.put(frame, this.readFrameSound(buffer));
             }
         } else if (opcode == (rev226 ? 15 : 16)) {
-            int rangeBegin = buffer.readUnsignedShort();
-            int rangeEnd = buffer.readUnsignedShort();
+            animation.rangeBegin = buffer.readUnsignedShort();
+            animation.rangeEnd = buffer.readUnsignedShort();
         } else if (opcode == 17) {
             boolean[] animayaMasks = new boolean[256];
             Arrays.fill(animayaMasks, false);
@@ -155,25 +148,20 @@ public class AnimationDefinitionLoaderOSRS extends AnimationDefinitionLoader {
             System.err.println("Error unrecognised seq config code: " + opcode);
         }
 
-        if (animation.getFrameCount() == 0) {
-            animation.setFrameCount(1);
-            int[] primaryFrames = new int[1];
-            primaryFrames[0] = -1;
-            int[] secondaryFrames = new int[1];
-            secondaryFrames[0] = -1;
-            int[] durations = new int[1];
-            durations[0] = -1;
-            animation.setPrimaryFrames(primaryFrames);
-            animation.setSecondaryFrames(secondaryFrames);
-            animation.setDurations(durations);
+        if (animation.getMoveStyle() == -1) {
+            if (animation.masks == null && animation.booleanMasks == null) {
+                animation.setMoveStyle(0);
+            } else {
+                animation.setMoveStyle(2);
+            }
         }
 
-        if (animation.getAnimatingPrecedence() == -1) {
-            animation.setAnimatingPrecedence(animation.getInterleaveOrder() == null ? 0 : 2);
-        }
-
-        if (animation.getWalkingPrecedence() == -1) {
-            animation.setWalkingPrecedence(animation.getInterleaveOrder() == null ? 0 : 2);
+        if (animation.idleStyle == -1) {
+            if (animation.masks == null && animation.booleanMasks == null) {
+                animation.idleStyle = 0;
+            } else {
+                animation.idleStyle = 2;
+            }
         }
     }
 
@@ -200,15 +188,10 @@ public class AnimationDefinitionLoaderOSRS extends AnimationDefinitionLoader {
         }
 
         if (id >= 1 && loops >= 1 && location >= 0 && retain >= 0) {
-            return new AnimationDefinitionLoaderOSRS.Sound(id, loops, location, retain, weight);
+            return new Sound(id, loops, location, retain, weight);
         } else {
             return null;
         }
-    }
-
-
-    record Sound(int id, int loops, int location, int retain, int weight) {
-
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.jagex.entity.object;
 
 import com.jagex.Client;
 import com.jagex.cache.anim.Animation;
-import com.jagex.cache.config.VariableBits;
 import com.jagex.cache.def.ObjectDefinition;
 import com.jagex.cache.loader.anim.AnimationDefinitionLoader;
 import com.jagex.cache.loader.object.ObjectDefinitionLoader;
@@ -42,7 +41,7 @@ public class RenderableObject extends Renderable {
 			if (animation != null) {
 				currentFrameId = 0;
 				currentFrameDuration = Client.pulseTick;
-				if (randomFrame && animation.getLoopOffset() != -1) {
+				if (randomFrame && animation.getFrameStep() != -1) {
 					currentFrameId = (int) (Math.random() * animation.getFrameCount());
 					currentFrameDuration -= (int) (Math.random() * animation.duration(currentFrameId));
 				}
@@ -56,7 +55,7 @@ public class RenderableObject extends Renderable {
 		int lastFrame = -1;
 		if (animation != null && Options.loadAnimations.get()) {
 			int tickDelta = Client.pulseTick - currentFrameDuration;
-			if (tickDelta > 100 && animation.getLoopOffset() > 0) {
+			if (tickDelta > 100 && animation.getFrameStep() > 0) {
 				tickDelta = 100;
 			}
 
@@ -66,7 +65,7 @@ public class RenderableObject extends Renderable {
 				if (currentFrameId < animation.getFrameCount()) {
 					continue;
 				}
-				currentFrameId -= animation.getLoopOffset();
+				currentFrameId -= animation.getFrameStep();
 				if (currentFrameId >= 0 && currentFrameId < animation.getFrameCount()) {
 					continue;
 				}

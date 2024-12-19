@@ -1,5 +1,6 @@
 package com.jagex.entity.object;
 
+import com.jagex.Client;
 import com.jagex.cache.anim.Frame;
 import com.jagex.cache.anim.Graphic;
 import com.jagex.cache.loader.anim.FrameLoader;
@@ -122,6 +123,10 @@ public final class AnimableObject extends Renderable {
 	}
 
 	public final void nextAnimationStep(int elapsedTime) {
+		if (graphic.getAnimation() != null) {
+			this.elapsedFrames = 0;
+			this.duration = Client.tickDelta - 1;
+		}
 		for (duration += elapsedTime; duration > graphic.getAnimation().duration(elapsedFrames);) {
 			duration -= graphic.getAnimation().duration(elapsedFrames) + 1;
 			elapsedFrames++;
